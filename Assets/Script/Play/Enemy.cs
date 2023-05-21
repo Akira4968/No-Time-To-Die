@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         
-        if(Instance != null)
+        if(Instance == null)
         {
             Instance= this;
         }
@@ -29,27 +29,37 @@ public class Enemy : MonoBehaviour
     public void FolowPlayer()
     {
         this.transform.position = Vector3.MoveTowards(this.transform.position, PlayerControler.instance.PlayerPotision(), _speed * Time.deltaTime);
+
     }
-    public int Atack()
+    public void Attack()
     {
-        return 2;
+        animator.SetTrigger("Hit");
     }
     public void GetHit()
     {
         animator.SetBool("IsDie", true);
+        _speed = 0;
         StartCoroutine(Die());
     }
     IEnumerator Die()
     {
+        GameManager.instance.EnemyScore();
         yield return new WaitForSecondsRealtime(1);
         Destroy(gameObject);
     }
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Bullet")
+        {
+            
+            GetHit();
+        }
+    }
     public void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if(collision.gameObject.tag == "Player")
         {
-            Debug.Log("colli");
-            GetHit();
+            Attack();
         }
     }
 }

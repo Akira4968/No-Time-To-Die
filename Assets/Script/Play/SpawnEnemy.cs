@@ -7,13 +7,6 @@ public class SpawnEnemy : MonoBehaviour
     [SerializeField] List<GameObject>  enemies = new List<GameObject>();
     [SerializeField] float time = 0;
     float queueTime =5;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
         if(time > queueTime)

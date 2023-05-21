@@ -8,6 +8,7 @@ public class PlayerControler : MonoBehaviour
     float _Speed = 5f;
     [SerializeField] Animator _animator;
     int _HP;
+    [SerializeField] GameObject Char;
 
     public int HP { get => _HP; set => _HP = value; }
 
@@ -15,7 +16,7 @@ public class PlayerControler : MonoBehaviour
     void Start()
     {
         _animator = GetComponent<Animator>();
-        HP = 10;
+        HP = 5;
         if (instance == null)
         {
             instance = this;
@@ -38,11 +39,11 @@ public class PlayerControler : MonoBehaviour
         transform.Translate(0, Input.GetAxis("Vertical") * _Speed * Time.deltaTime, 0);
         if (Input.GetAxis("Horizontal") > 0)
         {
-            transform.localScale = new Vector3(1, 1, 1);
+            Char.transform.localScale = new Vector3(1, 1, 1);
         }
         else if (Input.GetAxis("Horizontal") < 0)
         {
-            transform.localScale = new Vector3(-1, 1, 1);
+            Char.transform.localScale = new Vector3(-1, 1, 1);
         }
     }
     public void RunAnimation()
@@ -57,25 +58,30 @@ public class PlayerControler : MonoBehaviour
         }
 
     }
-    public void GetHit(int dmg)
+    public void GetHit()
     {
-        HP-= dmg;
+        HP--;
         Debug.Log("hit");
-        if(HP<0)
+        if(HP<=0)
         {
             Die();
         }
     }
     void Die()
     {
+        _animator.SetBool("IsDie", true);
+        
+    }
+    IEnumerator Dead()
+    {
+        yield return new WaitForSeconds(1);
+    }
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Enemy")
+        {
+            GetHit();
+        }
 
     }
-    /*public void OnCollisionEnter2D(Collision2D collision)
-    {
-        if(collision.gameObject.tag == "Enemy")
-        {
-            GetHit(Enemy.Instance.Atack());
-        }
-        
-    }*/
 }

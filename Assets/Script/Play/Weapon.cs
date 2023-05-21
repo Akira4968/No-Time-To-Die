@@ -5,6 +5,8 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     Transform _transform;
+    [SerializeField] GameObject _Bullet;
+    [SerializeField] Transform _Firepoint;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,6 +17,10 @@ public class Weapon : MonoBehaviour
     void Update()
     {
         LAMouse();
+        if (Input.GetMouseButtonDown(0))
+        {
+            Fire();
+        }
     }
     void LAMouse()
     {
@@ -22,5 +28,9 @@ public class Weapon : MonoBehaviour
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         _transform.rotation = rotation;
+    }
+    public void Fire()
+    {
+        Instantiate(_Bullet,_Firepoint.position,_Firepoint.rotation);
     }
 }
